@@ -1,8 +1,5 @@
-#ifndef INCL_EPONYM_EPONYM_HPP
-#define INCL_EPONYM_EPONYM_HPP
-
 ///////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Michael B. Price
@@ -27,30 +24,33 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////
 
-#include <utility>
+#include <iostream>
+#include "eponym/eponym.hpp"
 
-/**
-    The second parameter becomes an alias of the first within the current scope
-*/
-#define EPONYM_ALIAS(fullyQualifiedFunctionName, newName)                \
-template <typename ... Args>                                             \
-auto newName (Args... args)                                              \
-  -> decltype(fullyQualifiedFunctionName(std::forward<Args>(args)...)) { \
-    return fullyQualifiedFunctionName(std::forward<Args>(args)...);      \
+EPONYM_USING(std::cout, write)
+EPONYM_USING(std::cout, flush)
+
+struct Implementation
+{
+    void sayHello ()
+    {
+        write("Hello cout\n", 11);
+        flush();
+    }
+};
+
+class Wrapper
+{
+    Implementation impl;
+
+ public:
+    EPONYM_USING(impl, sayHello);
+};
+
+int main ()
+{
+    Wrapper wrapper;
+    wrapper.sayHello();
+    return 0;
 }
-
-
-/**
-    Creates an alias for the member function named by the second parameter, for
-    the object named by the first parameter, within the current scope
-*/
-#define EPONYM_USING(delegateObject, functionName)                       \
-template <typename ... Args>                                             \
-auto functionName (Args... args)                                         \
- -> decltype(delegateObject.functionName(std::forward<Args>(args)...)) { \
-    return delegateObject.functionName(std::forward<Args>(args)...);     \
-}
-
-
-#endif // INCL_EPONYM_EPONYM_HPP
 
