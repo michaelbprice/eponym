@@ -34,7 +34,7 @@
 */
 #define EPONYM_ALIAS(fullyQualifiedFunctionName, newName)                \
 template <typename ... Args>                                             \
-auto newName (Args... args)                                              \
+auto newName (Args&&... args)                                            \
   -> decltype(fullyQualifiedFunctionName(std::forward<Args>(args)...)) { \
     return fullyQualifiedFunctionName(std::forward<Args>(args)...);      \
 }
@@ -46,7 +46,7 @@ auto newName (Args... args)                                              \
 */
 #define EPONYM_USING(delegateObject, functionName)                       \
 template <typename ... Args>                                             \
-auto functionName (Args... args)                                         \
+auto functionName (Args&&... args)                                       \
  -> decltype(delegateObject.functionName(std::forward<Args>(args)...)) { \
     return delegateObject.functionName(std::forward<Args>(args)...);     \
 }
